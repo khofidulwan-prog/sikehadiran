@@ -4,7 +4,7 @@
 // =============================================================
 
 const CONFIG = {
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby3Z_gAj8cuogCFZa5gTSmd04imvth6A-P-GSgt_us/dev', // diisi user setelah deploy
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzwtab_BJ2Je8urIU5DCSQbSYClIBCuOZ_yf3Uaa65bo77GRk5dqAxpPVWfOxneq0yz/exec', // deployment Web App publik
   KANTOR: {
     nama: 'Kantor Pusat',
     lat: -2.084051,   // admin isi koordinat kantor

@@ -4,7 +4,7 @@
 // Version: 1.0.0
 // ============================================================
 
-const CACHE_NAME = 'sikehadiran-v1.0.0';
+const CACHE_NAME = 'sikehadiran-v1.0.1';
 const CACHE_URLS = [
   './',
   './index.html',
@@ -605,4 +605,4 @@ async function clearQueue(store) {
   }
 }
 
-console.log('[SW] Service Worker SiKehadiran v1.0.0 dimuat. Cache:', CACHE_NAME);
+console.log('[SW] Service Worker SiKehadiran v1.0.1 dimuat. Cache:', CACHE_NAME);
