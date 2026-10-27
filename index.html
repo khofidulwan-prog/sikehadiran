@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#003366" />
+  <meta name="description" content="Sistem Informasi Kehadiran Karyawan BUMN" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SiKehadiran" />
+  <title>SiKehadiran — Sistem Informasi Kehadiran Karyawan</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== PAGE: LOGIN ===================== -->
+  <section id="page-login" class="page active">
+    <div class="login-bg">
+      <div class="login-card">
+        <!-- Logo -->
+        <div class="login-logo">
+          <div class="logo-circle">
+            <i class="fas fa-building"></i>
+          </div>
+          <h1 class="login-title">SiKehadiran</h1>
+          <p class="login-subtitle">Sistem Informasi Kehadiran Karyawan</p>
+        </div>
+
+        <!-- Form Login -->
+        <form id="form-login" autocomplete="off" novalidate>
+          <!-- NIP/NIK -->
+          <div class="input-group">
+            <span class="input-icon"><i class="fas fa-id-card"></i></span>
+            <input
+              type="text"
+              id="input-nip"
+              class="form-input"
+              placeholder="Masukkan NIP/NIK"
+              inputmode="numeric"
+              maxlength="18"
+              required
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="input-group">
+            <span class="input-icon"><i class="fas fa-lock"></i></span>
+            <input
+              type="password"
+              id="input-password"
+              class="form-input"
+              placeholder="Masukkan Password"
+              required
+            />
+            <button type="button" class="toggle-password" id="toggle-pw" aria-label="Toggle password visibility">
+              <i class="fas fa-eye" id="toggle-pw-icon"></i>
+            </button>
+          </div>
+
+          <!-- Error message -->
+          <div id="login-error" class="form-error" style="display:none;"></div>
+
+          <!-- Button Login -->
+          <button type="submit" class="btn-login" id="btn-login">
+            <span id="btn-login-text">MASUK</span>
+            <span id="btn-login-spinner" class="spinner" style="display:none;"></span>
+          </button>
+
+          <!-- Demo Accounts Helper -->
+          <div class="demo-accounts-card" style="margin-top: 16px; padding: 12px; background: #eef4fb; border-radius: 10px; font-size: 12px; border: 1px dashed #0055A4;">
+            <p style="font-weight: 600; color: #003366; margin-bottom: 8px;"><i class="fas fa-user-check"></i> Akun Demo (Klik untuk isi cepat):</p>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <button type="button" class="btn-demo-fill" data-nip="198501012010011001" style="background:#fff; border:1px solid #b3cde0; border-radius:6px; padding:6px 10px; text-align:left; cursor:pointer; font-size:12px; color:#003366;">
+                <strong>1. Budi Santoso</strong> (Staff SDM)<br><span style="color:#666;">NIP: 198501012010011001</span>
+              </button>
+              <button type="button" class="btn-demo-fill" data-nip="199203152015032002" style="background:#fff; border:1px solid #b3cde0; border-radius:6px; padding:6px 10px; text-align:left; cursor:pointer; font-size:12px; color:#003366;">
+                <strong>2. Siti Rahayu</strong> (Analis Keuangan)<br><span style="color:#666;">NIP: 199203152015032002</span>
+              </button>
+              <button type="button" class="btn-demo-fill" data-nip="197809202005011003" style="background:#fff; border:1px solid #b3cde0; border-radius:6px; padding:6px 10px; text-align:left; cursor:pointer; font-size:12px; color:#003366;">
+                <strong>3. Agus Prasetyo</strong> (Kepala Seksi / Admin)<br><span style="color:#666;">NIP: 197809202005011003</span>
+              </button>
+            </div>
+            <p style="font-size:11px; color:#555; margin-top:8px; margin-bottom:0;">Password default: <code>BUMN2024</code></p>
+          </div>
+        </form>
+
+        <!-- Footer -->
+        <p class="login-footer">© 2026 Direktorat SDM &mdash; Versi 1.0.0</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: DASHBOARD ===================== -->
+  <section id="page-dashboard" class="page">
+    <!-- Header -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <img id="dash-foto" src="assets/img/avatar-default.png" alt="Foto Profil" class="dash-avatar" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'50\' height=\'50\'%3E%3Ccircle cx=\'25\' cy=\'25\' r=\'25\' fill=\'%23FFD700\'/%3E%3Ctext x=\'25\' y=\'30\' text-anchor=\'middle\' fill=\'%23003366\' font-size=\'18\' font-family=\'Poppins,sans-serif\' font-weight=\'700\'%3EK%3C/text%3E%3C/svg%3E'" />
+        <div class="dash-user-info">
+          <p class="dash-nama" id="dash-nama">Loading...</p>
+          <p class="dash-jabatan" id="dash-jabatan">—</p>
+        </div>
+      </div>
+      <div class="dash-header-right">
+        <button class="header-icon-btn" id="btn-notif" aria-label="Notifikasi">
+          <i class="fas fa-bell"></i>
+          <span class="notif-badge" id="notif-count" style="display:none;">0</span>
+        </button>
+        <button class="header-icon-btn" id="btn-logout-header" aria-label="Keluar">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Tanggal & Jam -->
+    <div class="dash-datetime-card">
+      <div class="dash-datetime-top">
+        <p id="dash-tanggal" class="dash-tanggal">—</p>
+        <span id="dash-status-badge" class="badge-hadir" style="display:none;">Hadir</span>
+      </div>
+      <p id="dash-jam" class="dash-jam">00:00:00</p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="dash-content">
+      <p class="section-label">Statistik Bulan Ini</p>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-hadir"><i class="fas fa-check-circle"></i></div>
+          <p class="stat-value" id="stat-hadir">0</p>
+          <p class="stat-label">Hadir</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-terlambat"><i class="fas fa-clock"></i></div>
+          <p class="stat-value" id="stat-terlambat">0</p>
+          <p class="stat-label">Terlambat</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-izin"><i class="fas fa-file-alt"></i></div>
+          <p class="stat-value" id="stat-izin">0</p>
+          <p class="stat-label">Izin</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-absen"><i class="fas fa-times-circle"></i></div>
+          <p class="stat-value" id="stat-absen">0</p>
+          <p class="stat-label">Absen</p>
+        </div>
+      </div>
+
+      <!-- Absensi Hari Ini -->
+      <p class="section-label">Absensi Hari Ini</p>
+      <div class="card">
+        <div class="absen-btn-row">
+          <button class="btn-absen btn-absen-masuk" id="btn-absen-masuk">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>ABSEN MASUK</span>
+          </button>
+          <button class="btn-absen btn-absen-pulang" id="btn-absen-pulang">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>ABSEN PULANG</span>
+          </button>
+        </div>
+        <div class="absen-info-row">
+          <div class="absen-info-item">
+            <i class="fas fa-sign-in-alt text-success"></i>
+            <div>
+              <p class="absen-info-label">Masuk</p>
+              <p class="absen-info-value" id="info-jam-masuk">--:--</p>
+            </div>
+          </div>
+          <div class="absen-info-divider"></div>
+          <div class="absen-info-item">
+            <i class="fas fa-sign-out-alt text-danger"></i>
+            <div>
+              <p class="absen-info-label">Pulang</p>
+              <p class="absen-info-value" id="info-jam-pulang">--:--</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Layanan -->
+      <p class="section-label">Menu Layanan</p>
+      <div class="menu-grid">
+        <button class="menu-card menu-izin" id="btn-menu-izin">
+          <i class="fas fa-file-medical"></i>
+          <span>Ajukan Izin</span>
+        </button>
+        <button class="menu-card menu-lembur" id="btn-menu-lembur">
+          <i class="fas fa-business-time"></i>
+          <span>Lembur</span>
+        </button>
+        <button class="menu-card menu-cuti" id="btn-menu-cuti">
+          <i class="fas fa-umbrella-beach"></i>
+          <span>Cuti</span>
+        </button>
+      </div>
+
+      <!-- Informasi Kantor -->
+      <p class="section-label">Informasi Kantor</p>
+      <div class="card card-kantor">
+        <div class="kantor-row">
+          <i class="fas fa-building kantor-icon"></i>
+          <div>
+            <p class="kantor-label">Nama Kantor</p>
+            <p class="kantor-value" id="info-nama-kantor">—</p>
+          </div>
+        </div>
+        <div class="kantor-row">
+          <i class="fas fa-map-circle kantor-icon"></i>
+          <div>
+            <p class="kantor-label">Radius Absen</p>
+            <p class="kantor-value" id="info-radius-absen">— meter</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: ABSEN MASUK ===================== -->
+  <section id="page-absen-masuk" class="page">
+    <header class="page-header">
+      <button class="btn-back" id="btn-back-masuk" aria-label="Kembali">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="page-header-title">Absen Masuk</h2>
+      <div class="header-spacer"></div>
+    </header>
+
+    <div class="page-content">
+      <!-- Jam Saat Ini -->
+      <div class="card card-center">
+        <p class="card-sublabel">Waktu Saat Ini</p>
+        <p class="clock-display" id="absen-jam-masuk">00:00:00</p>
+        <p class="date-display" id="absen-tanggal-masuk">—</p>
+      </div>
+
+      <!-- Lokasi -->
+      <div class="card">
+        <div class="card-header-row">
+          <h3 class="card-title"><i class="fas fa-map-marker-alt"></i> Lokasi Anda</h3>
+          <button class="btn-sm btn-outline" id="btn-refresh-lokasi-masuk">
+            <i class="fas fa-sync-alt"></i> Perbarui
+          </button>
+        </div>
+        <div class="lokasi-coords">
+          <div class="coord-item">
+            <span class="coord-label">Lat:</span>
+            <span class="coord-value" id="absen-lat-masuk">—</span>
+          </div>
+          <div class="coord-item">
+            <span class="coord-label">Lng:</span>
+            <span class="coord-value" id="absen-lng-masuk">—</span>
+          </div>
+        </div>
+        <p class="lokasi-nama" id="absen-lokasi-nama">Mengambil lokasi...</p>
+        <div id="absen-radius-status" class="radius-status radius-loading">
+          <i class="fas fa-circle-notch fa-spin"></i> Memeriksa radius...
+        </div>
+      </div>
+
+      <!-- Foto Selfie -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-camera"></i> Foto Selfie</h3>
+        <div class="foto-preview-wrap">
+          <img id="preview-foto-masuk" src="" alt="Preview Foto" class="foto-preview" style="display:none;" />
+          <div class="foto-placeholder" id="foto-placeholder-masuk">
+            <i class="fas fa-user-circle"></i>
+            <p>Belum ada foto</p>
+          </div>
+        </div>
+        <label class="btn-foto" for="input-foto-masuk">
+          <i class="fas fa-camera"></i> Ambil Foto
+        </label>
+        <input type="file" id="input-foto-masuk" accept="image/*" capture="user" style="display:none;" />
+      </div>
+
+      <!-- Mode Kehadiran -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-briefcase"></i> Mode Kehadiran</h3>
+        <div class="mode-radio-group" id="mode-group-masuk">
+          <label class="mode-radio-card">
+            <input type="radio" name="mode-masuk" value="WFO" checked />
+            <div class="mode-radio-content">
+              <i class="fas fa-building"></i>
+              <span>WFO</span>
+            </div>
+          </label>
+          <label class="mode-radio-card">
+            <input type="radio" name="mode-masuk" value="WFH" />
+            <div class="mode-radio-content">
+              <i class="fas fa-home"></i>
+              <span>WFH</span>
+            </div>
+          </label>
+          <label class="mode-radio-card">
+            <input type="radio" name="mode-masuk" value="DL" />
+            <div class="mode-radio-content">
+              <i class="fas fa-car"></i>
+              <span>Dinas Luar</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Keterangan -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-comment-alt"></i> Keterangan (Opsional)</h3>
+        <textarea id="keterangan-masuk" class="form-textarea" placeholder="Tuliskan keterangan jika ada..." rows="3"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-submit btn-submit-masuk" id="btn-submit-masuk">
+        <i class="fas fa-check-circle"></i> KIRIM ABSEN MASUK
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: ABSEN PULANG ===================== -->
+  <section id="page-absen-pulang" class="page">
+    <header class="page-header">
+      <button class="btn-back" id="btn-back-pulang" aria-label="Kembali">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="page-header-title">Absen Pulang</h2>
+      <div class="header-spacer"></div>
+    </header>
+
+    <div class="page-content">
+      <!-- Jam Saat Ini -->
+      <div class="card card-center">
+        <p class="card-sublabel">Waktu Saat Ini</p>
+        <p class="clock-display" id="absen-jam-pulang">00:00:00</p>
+        <p class="date-display" id="absen-tanggal-pulang">—</p>
+      </div>
+
+      <!-- Total Jam Kerja -->
+      <div class="card card-center card-durasi">
+        <p class="card-sublabel">Total Jam Kerja</p>
+        <p class="durasi-display" id="total-jam-kerja">—</p>
+        <div id="info-lembur" class="lembur-badge" style="display:none;">
+          <i class="fas fa-business-time"></i>
+          <span id="lembur-durasi">Lembur: —</span>
+        </div>
+      </div>
+
+      <!-- Lokasi -->
+      <div class="card">
+        <div class="card-header-row">
+          <h3 class="card-title"><i class="fas fa-map-marker-alt"></i> Lokasi Anda</h3>
+          <button class="btn-sm btn-outline" id="btn-refresh-lokasi-pulang">
+            <i class="fas fa-sync-alt"></i> Perbarui
+          </button>
+        </div>
+        <div class="lokasi-coords">
+          <div class="coord-item">
+            <span class="coord-label">Lat:</span>
+            <span class="coord-value" id="absen-lat-pulang">—</span>
+          </div>
+          <div class="coord-item">
+            <span class="coord-label">Lng:</span>
+            <span class="coord-value" id="absen-lng-pulang">—</span>
+          </div>
+        </div>
+        <p class="lokasi-nama" id="absen-lokasi-nama-pulang">Mengambil lokasi...</p>
+        <div id="absen-radius-status-pulang" class="radius-status radius-loading">
+          <i class="fas fa-circle-notch fa-spin"></i> Memeriksa radius...
+        </div>
+      </div>
+
+      <!-- Foto Selfie -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-camera"></i> Foto Selfie</h3>
+        <div class="foto-preview-wrap">
+          <img id="preview-foto-pulang" src="" alt="Preview Foto" class="foto-preview" style="display:none;" />
+          <div class="foto-placeholder" id="foto-placeholder-pulang">
+            <i class="fas fa-user-circle"></i>
+            <p>Belum ada foto</p>
+          </div>
+        </div>
+        <label class="btn-foto" for="input-foto-pulang">
+          <i class="fas fa-camera"></i> Ambil Foto
+        </label>
+        <input type="file" id="input-foto-pulang" accept="image/*" capture="user" style="display:none;" />
+      </div>
+
+      <!-- Mode Kehadiran -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-briefcase"></i> Mode Kehadiran</h3>
+        <div class="mode-radio-group" id="mode-group-pulang">
+          <label class="mode-radio-card">
+            <input type="radio" name="mode-pulang" value="WFO" checked />
+            <div class="mode-radio-content">
+              <i class="fas fa-building"></i>
+              <span>WFO</span>
+            </div>
+          </label>
+          <label class="mode-radio-card">
+            <input type="radio" name="mode-pulang" value="WFH" />
+            <div class="mode-radio-content">
+              <i class="fas fa-home"></i>
+              <span>WFH</span>
+            </div>
+          </label>
+          <label class="mode-radio-card">
+            <input type="radio" name="mode-pulang" value="DL" />
+            <div class="mode-radio-content">
+              <i class="fas fa-car"></i>
+              <span>Dinas Luar</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Keterangan -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-comment-alt"></i> Keterangan (Opsional)</h3>
+        <textarea id="keterangan-pulang" class="form-textarea" placeholder="Tuliskan keterangan jika ada..." rows="3"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-submit btn-submit-pulang" id="btn-submit-pulang">
+        <i class="fas fa-sign-out-alt"></i> KIRIM ABSEN PULANG
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: RIWAYAT ===================== -->
+  <section id="page-riwayat" class="page">
+    <header class="page-header page-header-static">
+      <div class="header-spacer"></div>
+      <h2 class="page-header-title">Riwayat Absensi</h2>
+      <div class="header-spacer"></div>
+    </header>
+
+    <div class="page-content">
+      <!-- Filter -->
+      <div class="filter-row">
+        <div class="filter-select-wrap">
+          <select id="filter-bulan" class="filter-select">
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <select id="filter-tahun" class="filter-select">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+          </select>
+        </div>
+        <button class="btn-export" id="btn-export-pdf">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+      </div>
+
+      <!-- Ringkasan Bulan -->
+      <div class="ringkasan-row">
+        <div class="ringkasan-badge badge-hadir">
+          <span class="ringkasan-num" id="ringkasan-hadir">0</span>
+          <span>Hadir</span>
+        </div>
+        <div class="ringkasan-badge badge-terlambat">
+          <span class="ringkasan-num" id="ringkasan-terlambat">0</span>
+          <span>Terlambat</span>
+        </div>
+        <div class="ringkasan-badge badge-absen">
+          <span class="ringkasan-num" id="ringkasan-absen">0</span>
+          <span>Absen</span>
+        </div>
+      </div>
+
+      <!-- List Riwayat -->
+      <div id="list-riwayat" class="list-riwayat">
+        <!-- JS akan render item di sini -->
+        <div class="empty-state" id="riwayat-empty">
+          <i class="fas fa-calendar-times"></i>
+          <p>Belum ada data riwayat</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: PENGAJUAN ===================== -->
+  <section id="page-pengajuan" class="page">
+    <header class="page-header page-header-static">
+      <div class="header-spacer"></div>
+      <h2 class="page-header-title">Pengajuan Izin &amp; Cuti</h2>
+      <div class="header-spacer"></div>
+    </header>
+
+    <div class="page-content">
+      <!-- Tab -->
+      <div class="tab-bar">
+        <button class="tab-btn tab-active" id="tab-buat" data-tab="buat">
+          <i class="fas fa-plus-circle"></i> Buat Pengajuan
+        </button>
+        <button class="tab-btn" id="tab-status" data-tab="status">
+          <i class="fas fa-list-check"></i> Status Pengajuan
+        </button>
+      </div>
+
+      <!-- Tab Content: Buat Pengajuan -->
+      <div id="tab-content-buat" class="tab-content tab-content-active">
+        <div class="card">
+          <!-- Jenis Pengajuan -->
+          <div class="form-field">
+            <label class="form-label" for="jenis-pengajuan">Jenis Pengajuan</label>
+            <div class="select-wrap">
+              <select id="jenis-pengajuan" class="form-select">
+                <option value="">-- Pilih Jenis --</option>
+                <option value="izin-sakit">Izin Sakit</option>
+                <option value="izin-pribadi">Izin Pribadi</option>
+                <option value="cuti-tahunan">Cuti Tahunan</option>
+                <option value="cuti-khusus">Cuti Khusus</option>
+                <option value="dinas-luar">Dinas Luar</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tanggal -->
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="tanggal-mulai">Tanggal Mulai</label>
+              <input type="date" id="tanggal-mulai" class="form-input-date" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="tanggal-selesai">Tanggal Selesai</label>
+              <input type="date" id="tanggal-selesai" class="form-input-date" />
+            </div>
+          </div>
+
+          <!-- Jumlah Hari -->
+          <div class="jumlah-hari-info" id="jumlah-hari-wrap" style="display:none;">
+            <i class="fas fa-calendar-check"></i>
+            <span>Durasi: <strong id="jumlah-hari">0</strong> hari kerja</span>
+          </div>
+
+          <!-- Alasan -->
+          <div class="form-field">
+            <label class="form-label" for="alasan-pengajuan">Alasan / Keterangan</label>
+            <textarea id="alasan-pengajuan" class="form-textarea" placeholder="Jelaskan alasan pengajuan..." rows="4" required></textarea>
+          </div>
+
+          <!-- Lampiran -->
+          <div class="form-field">
+            <label class="form-label">Lampiran Dokumen (Opsional)</label>
+            <label class="btn-lampiran" for="input-lampiran">
+              <i class="fas fa-paperclip"></i> Pilih File
+            </label>
+            <input type="file" id="input-lampiran" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" />
+            <p class="lampiran-info" id="lampiran-nama">Belum ada file dipilih</p>
+            <p class="lampiran-hint">Format: PDF, JPG, PNG. Maks 5MB</p>
+          </div>
+
+          <!-- Submit -->
+          <button class="btn-submit btn-submit-pengajuan" id="btn-submit-pengajuan">
+            <i class="fas fa-paper-plane"></i> Kirim Pengajuan
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Content: Status Pengajuan -->
+      <div id="tab-content-status" class="tab-content">
+        <div id="list-pengajuan" class="list-pengajuan">
+          <!-- JS akan render item di sini -->
+          <div class="empty-state" id="pengajuan-empty">
+            <i class="fas fa-folder-open"></i>
+            <p>Belum ada pengajuan</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: PROFIL ===================== -->
+  <section id="page-profil" class="page">
+    <header class="page-header page-header-static">
+      <div class="header-spacer"></div>
+      <h2 class="page-header-title">Profil Saya</h2>
+      <div class="header-spacer"></div>
+    </header>
+
+    <div class="page-content">
+      <!-- Avatar & Info Utama -->
+      <div class="profil-hero card">
+        <div class="profil-avatar-wrap">
+          <img id="profil-foto" src="" alt="Foto Profil" class="profil-avatar" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23FFD700\'/%3E%3Ctext x=\'50\' y=\'58\' text-anchor=\'middle\' fill=\'%23003366\' font-size=\'36\' font-family=\'Poppins,sans-serif\' font-weight=\'700\'%3EK%3C/text%3E%3C/svg%3E'" />
+        </div>
+        <h2 class="profil-nama" id="profil-nama">—</h2>
+        <p class="profil-nip" id="profil-nip">NIP: —</p>
+        <span class="badge-status-aktif" id="profil-status-badge">Aktif</span>
+        <p class="profil-jabatan" id="profil-jabatan">—</p>
+        <p class="profil-divisi" id="profil-divisi">—</p>
+      </div>
+
+      <!-- Detail Info -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-info-circle"></i> Informasi Karyawan</h3>
+        <div class="profil-info-list">
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-envelope"></i> Email</span>
+            <span class="profil-info-value" id="profil-email">—</span>
+          </div>
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-phone"></i> No. HP</span>
+            <span class="profil-info-value" id="profil-telepon">—</span>
+          </div>
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-sitemap"></i> Departemen</span>
+            <span class="profil-info-value" id="profil-departemen">—</span>
+          </div>
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-id-badge"></i> Status</span>
+            <span class="profil-info-value" id="profil-status-kepegawaian">—</span>
+          </div>
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-calendar-alt"></i> Masa Kerja</span>
+            <span class="profil-info-value" id="profil-masa-kerja">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Konfigurasi Kantor -->
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-building"></i> Konfigurasi Kantor</h3>
+        <div class="profil-info-list">
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-map-marker-alt"></i> Nama Kantor</span>
+            <span class="profil-info-value" id="profil-nama-kantor">—</span>
+          </div>
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-ruler-combined"></i> Radius Absen</span>
+            <span class="profil-info-value" id="profil-radius">— meter</span>
+          </div>
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-clock"></i> Jam Masuk</span>
+            <span class="profil-info-value" id="profil-jam-masuk">—</span>
+          </div>
+          <div class="profil-info-item">
+            <span class="profil-info-label"><i class="fas fa-clock"></i> Jam Pulang</span>
+            <span class="profil-info-value" id="profil-jam-pulang">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <button class="btn-action btn-ubah-password" id="btn-ubah-password">
+        <i class="fas fa-key"></i> Ubah Password
+      </button>
+      <button class="btn-action btn-logout" id="btn-logout-profil">
+        <i class="fas fa-sign-out-alt"></i> Keluar
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== BOTTOM NAVIGATION ===================== -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="bottom-nav-item" data-page="page-dashboard" id="nav-beranda">
+      <i class="fas fa-home"></i>
+      <span>Beranda</span>
+    </button>
+    <button class="bottom-nav-item" data-page="page-absen-masuk" id="nav-absen">
+      <i class="fas fa-fingerprint"></i>
+      <span>Absen</span>
+    </button>
+    <button class="bottom-nav-item" data-page="page-riwayat" id="nav-riwayat">
+      <i class="fas fa-history"></i>
+      <span>Riwayat</span>
+    </button>
+    <button class="bottom-nav-item" data-page="page-profil" id="nav-profil">
+      <i class="fas fa-user"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Modal: Konfirmasi Absen Masuk -->
+  <div class="modal" id="modal-konfirmasi-masuk" role="dialog" aria-modal="true" aria-labelledby="modal-masuk-title">
+    <div class="modal-content">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="modal-masuk-title">Konfirmasi Absen Masuk</h3>
+      <p class="modal-subtitle">Periksa kembali data absensi Anda sebelum mengirim.</p>
+      <div class="modal-summary" id="modal-masuk-summary">
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-clock"></i> Jam Masuk</span>
+          <span class="summary-value" id="summary-masuk-jam">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-map-marker-alt"></i> Lokasi</span>
+          <span class="summary-value" id="summary-masuk-lokasi">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-briefcase"></i> Mode</span>
+          <span class="summary-value" id="summary-masuk-mode">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-camera"></i> Foto</span>
+          <span class="summary-value" id="summary-masuk-foto">—</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" id="btn-cancel-masuk">Batal</button>
+        <button class="btn-modal-confirm btn-success" id="btn-confirm-masuk">
+          <i class="fas fa-check"></i> Kirim
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Konfirmasi Absen Pulang -->
+  <div class="modal" id="modal-konfirmasi-pulang" role="dialog" aria-modal="true" aria-labelledby="modal-pulang-title">
+    <div class="modal-content">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="modal-pulang-title">Konfirmasi Absen Pulang</h3>
+      <p class="modal-subtitle">Periksa kembali data absensi Anda sebelum mengirim.</p>
+      <div class="modal-summary" id="modal-pulang-summary">
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-clock"></i> Jam Pulang</span>
+          <span class="summary-value" id="summary-pulang-jam">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-hourglass-half"></i> Total Kerja</span>
+          <span class="summary-value" id="summary-pulang-durasi">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-map-marker-alt"></i> Lokasi</span>
+          <span class="summary-value" id="summary-pulang-lokasi">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-briefcase"></i> Mode</span>
+          <span class="summary-value" id="summary-pulang-mode">—</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" id="btn-cancel-pulang">Batal</button>
+        <button class="btn-modal-confirm btn-danger" id="btn-confirm-pulang">
+          <i class="fas fa-check"></i> Kirim
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Loading Overlay -->
+  <div class="modal modal-loading" id="modal-loading" role="status" aria-live="polite">
+    <div class="modal-loading-content">
+      <div class="loading-spinner-lg"></div>
+      <p class="loading-text" id="loading-text">Memproses...</p>
+    </div>
+  </div>
+
+  <!-- Modal: Success -->
+  <div class="modal modal-feedback" id="modal-success" role="alertdialog" aria-modal="true">
+    <div class="modal-content modal-feedback-content">
+      <div class="modal-handle"></div>
+      <div class="feedback-icon feedback-icon-success">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h3 class="feedback-title" id="success-title">Berhasil!</h3>
+      <p class="feedback-message" id="success-message">Absensi Anda berhasil dicatat.</p>
+      <button class="btn-modal-confirm btn-success btn-full" id="btn-close-success">
+        Tutup
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Error -->
+  <div class="modal modal-feedback" id="modal-error" role="alertdialog" aria-modal="true">
+    <div class="modal-content modal-feedback-content">
+      <div class="modal-handle"></div>
+      <div class="feedback-icon feedback-icon-error">
+        <i class="fas fa-times-circle"></i>
+      </div>
+      <h3 class="feedback-title" id="error-title">Gagal!</h3>
+      <p class="feedback-message" id="error-message">Terjadi kesalahan. Silakan coba lagi.</p>
+      <button class="btn-modal-confirm btn-danger btn-full" id="btn-close-error">
+        Tutup
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Ubah Password -->
+  <div class="modal" id="modal-ubah-password" role="dialog" aria-modal="true" aria-labelledby="modal-ubah-pw-title">
+    <div class="modal-content">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="modal-ubah-pw-title">Ubah Password</h3>
+      <form id="form-ubah-password" novalidate>
+        <div class="input-group input-group-sm">
+          <span class="input-icon"><i class="fas fa-lock"></i></span>
+          <input type="password" id="pw-lama" class="form-input" placeholder="Password Lama" required />
+        </div>
+        <div class="input-group input-group-sm">
+          <span class="input-icon"><i class="fas fa-lock"></i></span>
+          <input type="password" id="pw-baru" class="form-input" placeholder="Password Baru" required />
+        </div>
+        <div class="input-group input-group-sm">
+          <span class="input-icon"><i class="fas fa-lock"></i></span>
+          <input type="password" id="pw-konfirmasi" class="form-input" placeholder="Konfirmasi Password Baru" required />
+        </div>
+        <div id="ubah-pw-error" class="form-error" style="display:none;"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-cancel" id="btn-cancel-ubah-pw">Batal</button>
+          <button type="submit" class="btn-modal-confirm btn-primary" id="btn-confirm-ubah-pw">
+            <i class="fas fa-save"></i> Simpan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/absen.js"></script>
+  <script src="assets/js/riwayat.js"></script>
+  <script src="assets/js/app.js"></script>
+
+  <!-- Service Worker didaftarkan via assets/js/app.js -->
+</body>
+</html>
